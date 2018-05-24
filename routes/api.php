@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::group(['as' => 'api.'], function () {
+    Route::post('login', ['middleware' => ['web'], 'uses' => 'Auth\LoginController@login', 'as' => 'login']);
+    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
