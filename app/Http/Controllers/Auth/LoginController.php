@@ -66,7 +66,8 @@ class LoginController extends Controller
             }
         }
         if ('api' === $request->route()->getPrefix()) {
-            return $this->response->withItem($user, new UserTransformer);
+            auth()->logout();
+            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
         }
         return redirect()->intended($this->redirectTo);
     }

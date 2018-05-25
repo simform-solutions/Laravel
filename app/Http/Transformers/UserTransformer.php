@@ -7,14 +7,22 @@ use League\Fractal\TransformerAbstract;
 
 class UserTransformer extends TransformerAbstract
 {
+    protected $extra;
+
+    public function __construct(array $extra = [])
+    {
+        $this->extra = $extra;
+    }
+
     public function transform(User $user)
     {
-        return [
+        return array_merge([
             'id' => $user->id,
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'email' => $user->email,
-            'mobile_number' => $user->mobile_number
-        ];
+            'mobile_number' => $user->mobile_number,
+            'avatar' => $user->avatar
+        ], $this->extra);
     }
 }
