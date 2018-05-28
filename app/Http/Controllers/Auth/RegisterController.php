@@ -65,7 +65,8 @@ class RegisterController extends Controller
             'password' => 'required_without:facebook_id|string|min:6|max:20',
             'avatar' => [
                 'required',
-                new ValidateImage
+                new ValidateImage,
+                'unique:users'
             ],
             'facebook_id' => 'numeric|unique:users'
         ]);
