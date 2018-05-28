@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile_number', 20)->unique()->index();
             $table->string('avatar')->nullable()->unique();
             $table->string('password');
+            $table->unsignedBigInteger('facebook_id')->nullable()->unique()->index();
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();

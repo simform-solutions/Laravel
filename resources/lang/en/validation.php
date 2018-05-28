@@ -125,9 +125,10 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        '*' => [
+            'phone' => 'The :attribute field contains an invalid number.',
         ],
+        'invalidImage' => 'The :attribute is invalid.'
     ],
 
     /*

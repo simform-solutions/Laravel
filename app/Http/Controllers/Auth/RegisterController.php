@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Transformers\UserTransformer;
+use App\Rules\ValidateImage;
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -33,7 +35,6 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -51,10 +52,15 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => 'required|string|max:30',
             'last_name' => 'required|string|max:30',
-            'mobile_number' => 'required|string|email|max:20|unique:users',
+            'mobile_number' => 'required|string|max:20|phone|unique:users',
+            'mobile_number_country' => 'required_with:mobile_number',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6|max:20',
-            'avatar' => 'regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'
+            'password' => 'required_without:facebook_id|string|min:6|max:20',
+            'avatar' => [
+                'required',
+                new ValidateImage
+            ],
+            'facebook_id' => 'numeric|unique:users'
         ]);
     }
 
@@ -66,10 +72,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return User::create($data);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  mixed $user
+     * @return mixed
+     */
+    protected function registered(Request $request, $user)
+    {
+        if ('api' === $request->route()->getPrefix()) {
+            auth()->logout();
+            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
+        }
+        return redirect()->intended($this->redirectTo);
     }
 }

@@ -152,6 +152,8 @@ return [
          */
         EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
