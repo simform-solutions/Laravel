@@ -8,6 +8,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -33,11 +34,17 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
-     * Create a new controller instance.
-     *
+     * @var Response
      */
-    public function __construct()
+    protected $response;
+
+    /**
+     * Create a new controller instance.
+     * @param Response $response
+     */
+    public function __construct(Response $response)
     {
+        $this->response = $response;
         $this->middleware('guest');
     }
 
