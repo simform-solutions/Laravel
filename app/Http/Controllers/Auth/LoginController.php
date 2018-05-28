@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\UserTransformer;
+use App\User;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -70,6 +72,18 @@ class LoginController extends Controller
             return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
         }
         return redirect()->intended($this->redirectTo);
+    }
+
+    protected function fbLogin(Request $request)
+    {
+        $this->validate($request, ['facebook_id' => 'required|numeric']);
+
+        if ($user = User::whereFacebookId($request->get('facebook_id'))->first()) {
+            $this->guard()->login($user);
+            return $this->sendLoginResponse($request);
+        }
+
+        return $this->response->withArray($request->only('facebook_id'));
     }
 
     protected function sendFailedLoginResponse(Request $request)

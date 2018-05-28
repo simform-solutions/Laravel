@@ -56,9 +56,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'mobile_number' => 'required|string|max:20|phone|unique:users',
-            'mobile_number_country' => 'required_with:mobile_number',
+        return Validator::make($data, array_merge($this->getMobileNumberValidationRules(), [
             'first_name' => 'required|string|max:30',
             'last_name' => 'required|string|max:30',
             'email' => 'required|string|email|max:100|unique:users',
@@ -69,7 +67,7 @@ class RegisterController extends Controller
                 'unique:users'
             ],
             'facebook_id' => 'numeric|unique:users'
-        ]);
+        ]));
     }
 
     /**
@@ -97,5 +95,19 @@ class RegisterController extends Controller
             return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
         }
         return redirect()->intended($this->redirectTo);
+    }
+
+    public function checkMobileNumber(Request $request)
+    {
+        $this->validate($request, $this->getMobileNumberValidationRules());
+        return $this->response->withArray($request->only('mobile_number'));
+    }
+
+    private function getMobileNumberValidationRules()
+    {
+        return [
+            'mobile_number' => 'required|string|max:20|phone|unique:users',
+            'mobile_number_country' => 'required_with:mobile_number',
+        ];
     }
 }
