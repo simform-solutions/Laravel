@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use EllipseSynergie\ApiResponse\Laravel\Response;
 use Exception;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -26,6 +29,14 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    protected $response;
+
+    public function __construct(Container $container, Response $response)
+    {
+        $this->response = $response;
+        parent::__construct($container);
+    }
+
     /**
      * Report or log an exception.
      *
@@ -42,10 +53,13 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException && 'api' === $request->route()->getPrefix()) {
+            return $this->response->errorUnprocessable($exception->validator->errors()->first());
+        }
         return parent::render($request, $exception);
     }
 }

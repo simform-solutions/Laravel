@@ -57,10 +57,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'first_name' => 'required|string|max:30',
-            'last_name' => 'required|string|max:30',
             'mobile_number' => 'required|string|max:20|phone|unique:users',
             'mobile_number_country' => 'required_with:mobile_number',
+            'first_name' => 'required|string|max:30',
+            'last_name' => 'required|string|max:30',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required_without:facebook_id|string|min:6|max:20',
             'avatar' => [
