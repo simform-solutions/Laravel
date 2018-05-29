@@ -78,6 +78,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $data['password'] = bcrypt($data['password']);
         return User::create($data);
     }
 
@@ -106,7 +107,7 @@ class RegisterController extends Controller
     private function getMobileNumberValidationRules()
     {
         return [
-            'mobile_number' => 'required|string|max:20|phone|' . (\request()->query->has('forgot') ? 'exists' : 'unique') . ':users',
+            'mobile_number' => 'required|string|max:20|phone|unique:users',
             'mobile_number_country' => 'required_with:mobile_number',
         ];
     }

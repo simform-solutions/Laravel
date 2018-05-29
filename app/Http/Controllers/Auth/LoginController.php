@@ -8,7 +8,6 @@ use App\User;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -24,7 +23,12 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        validateLogin as defaultValidateLogin;
+        attemptLogin as defaultAttemptLogin;
+        username as defaultUsername;
+        sendFailedLoginResponse as defaultSendFailedLoginResponse;
+    }
 
     /**
      * Where to redirect users after login.
@@ -59,42 +63,60 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if (!$user->is_active) {
-            if ('api' === $request->route()->getPrefix()) {
-                return $this->response->errorUnprocessable(__('auth.account_inactive'));
-            } else {
-                throw ValidationException::withMessages([
-                    $this->username() => [__('auth.account_inactive')],
-                ]);
-            }
+            auth()->logout();
+            throw ValidationException::withMessages([
+                $this->username() => [__('auth.account_inactive')],
+            ]);
         }
+
         if ('api' === $request->route()->getPrefix()) {
             auth()->logout();
             return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
         }
+
         return redirect()->intended($this->redirectTo);
     }
 
-    protected function fbLogin(Request $request)
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateLogin(Request $request)
     {
-        $this->validate($request, ['facebook_id' => 'required|numeric']);
+        if ($request->request->has('facebook_id')) {
+            $this->validate($request, ['facebook_id' => 'required|numeric']);
+        } else {
+            $this->defaultValidateLogin($request);
+        }
+    }
 
-        if ($user = User::whereFacebookId($request->get('facebook_id'))->first()) {
-            $this->guard()->login($user);
-            return $this->sendLoginResponse($request);
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        if ($request->request->has('facebook_id')) {
+            if ($user = User::whereFacebookId($request->get('facebook_id'))->first()) {
+                $this->guard()->login($user);
+                return $this->guard()->check();
+            }
         }
 
-        return $this->response->withArray($request->only('facebook_id'));
+        return $this->defaultAttemptLogin($request);
     }
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        if ('api' === $request->route()->getPrefix()) {
-            return $this->response->errorUnauthorized(__('auth.failed'));
-        } else {
-            throw ValidationException::withMessages([
-                $this->username() => [__('auth.failed')],
-            ]);
+        if ($request->request->has('facebook_id')) {
+            return $this->response->withArray($request->only('facebook_id'));
         }
+
+        return $this->defaultSendFailedLoginResponse($request);
     }
 
     /**
@@ -104,6 +126,10 @@ class LoginController extends Controller
      */
     public function username()
     {
-        return 'mobile_number';
+        if ('api' === \request()->route()->getPrefix()) {
+            return 'mobile_number';
+        }
+
+        return $this->defaultUsername();
     }
 }

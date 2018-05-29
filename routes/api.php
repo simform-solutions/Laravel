@@ -16,10 +16,10 @@ use Illuminate\Http\Request;
 Route::group(['as' => 'api.'], function () {
     Route::group(['namespace' => 'Auth'], function () {
         Route::post('login', ['middleware' => ['web'], 'uses' => 'LoginController@login', 'as' => 'login']);
-        Route::post('fb-login', ['middleware' => ['web'], 'uses' => 'LoginController@fbLogin', 'as' => 'fb-login']);
         Route::post('register', ['middleware' => ['web'], 'uses' => 'RegisterController@register', 'as' => 'register']);
         Route::post('check-mobile-number', ['uses' => 'RegisterController@checkMobileNumber', 'as' => 'check-mobile-number']);
-        Route::post('password/email', ['uses' => 'ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
+        Route::post('verify-mobile-number', ['uses' => 'ForgotPasswordController@sendResetLinkEmail', 'as' => 'verify-mobile-number']);
+        Route::post('password/reset', ['uses' => 'ResetPasswordController@reset', 'as' => 'password.reset']);
     });
 });
 

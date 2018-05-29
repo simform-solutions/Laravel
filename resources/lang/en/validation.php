@@ -128,7 +128,10 @@ return [
         '*' => [
             'phone' => 'The :attribute field contains an invalid number.',
         ],
-        'invalidImage' => 'The :attribute is invalid.'
+        'invalidImage' => 'The :attribute is invalid.',
+        'exists' => [
+            'mobile_number' => 'The mobile number does not exists'
+        ]
     ],
 
     /*

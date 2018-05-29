@@ -33,8 +33,8 @@ class User extends Authenticatable
         return $value ?: asset(env('USER_DEFAULT_AVATAR'));
     }
 
-    public function setPasswordAttribute($value)
+    public function getEmailForPasswordReset()
     {
-        $this->attributes['password'] = bcrypt($value);
+        return ('api' === \request()->route()->getPrefix()) ? $this->mobile_number : $this->email;
     }
 }
