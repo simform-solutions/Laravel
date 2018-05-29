@@ -25,6 +25,7 @@ class ResetPasswordController extends Controller
         rules as defaultRules;
         credentials as defaultCredentials;
         sendResetResponse as defaultSendResetResponse;
+        sendResetFailedResponse as defaultSendResetFailedResponse;
     }
 
     /**
@@ -97,5 +98,20 @@ class ResetPasswordController extends Controller
         }
 
         return $this->defaultSendResetResponse($response);
+    }
+
+    /**
+     * Get the response for a failed password reset.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetFailedResponse(Request $request, $response)
+    {
+        if ('api' === \request()->route()->getPrefix()) {
+            return $this->response->errorUnauthorized(__($response));
+        }
+        return $this->defaultSendResetFailedResponse($request, $response);
     }
 }

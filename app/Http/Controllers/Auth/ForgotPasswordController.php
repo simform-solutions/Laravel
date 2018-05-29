@@ -53,9 +53,7 @@ class ForgotPasswordController extends Controller
         if ('api' === \request()->route()->getPrefix()) {
             $this->validateMobile($request);
             if ($user = User::whereMobileNumber($request->get('mobile_number'))->first()) {
-                return $this->response->withArray([
-                    'token' => $this->broker()->getRepository()->create($user)
-                ]);
+                return $this->response->withArray([], ['X-Session-Token' => $this->broker()->getRepository()->create($user)]);
             }
             throw ValidationException::withMessages([
                 'mobile_number' => [__('validation.custom.exists.mobile_number')],
