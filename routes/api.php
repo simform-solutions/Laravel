@@ -19,7 +19,7 @@ Route::group(['as' => 'api.'], function () {
         Route::post('register', ['middleware' => ['web'], 'uses' => 'RegisterController@register', 'as' => 'register']);
         Route::post('check-mobile-number', ['uses' => 'RegisterController@checkMobileNumber', 'as' => 'check-mobile-number']);
         Route::post('verify-mobile-number', ['uses' => 'ForgotPasswordController@sendResetLinkEmail', 'as' => 'verify-mobile-number']);
-        Route::post('password/reset', ['uses' => 'ResetPasswordController@reset', 'as' => 'password.reset']);
+        Route::post('password/reset', ['middleware' => ['web'], 'uses' => 'ResetPasswordController@reset', 'as' => 'password.reset']);
     });
 });
 
