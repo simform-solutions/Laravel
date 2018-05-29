@@ -101,7 +101,7 @@ class RegisterController extends Controller
     public function checkMobileNumber(Request $request)
     {
         $this->validate($request, $this->getMobileNumberValidationRules());
-        return $this->response->withArray($request->only('mobile_number'));
+        return $this->response->withArray([]);
     }
 
     private function getMobileNumberValidationRules()

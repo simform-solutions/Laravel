@@ -113,7 +113,7 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse(Request $request)
     {
         if ($request->request->has('facebook_id')) {
-            return $this->response->withArray($request->only('facebook_id'));
+            return $this->response->withArray([]);
         }
 
         return $this->defaultSendFailedLoginResponse($request);
