@@ -72,6 +72,11 @@ class LoginController extends Controller
         if ('api' === $request->route()->getPrefix()) {
             auth()->logout();
             return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
+        } elseif (!$user->hasRole('admin') && !$user->hasRole('restaurant_manager')) {
+            auth()->logout();
+            throw ValidationException::withMessages([
+                $this->username() => [__('auth.failed')],
+            ]);
         }
 
         return redirect()->intended($this->redirectTo);

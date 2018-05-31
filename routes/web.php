@@ -11,6 +11,14 @@
 |
 */
 
+Auth::routes();
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
+});
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['namespace' => 'Admin', 'as' => 'admin.', 'middleware' => 'role:admin'], function () {
+        Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+        Route::resource('managers', 'ManagersController');
+    });
 });

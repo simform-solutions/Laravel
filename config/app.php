@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Captain'),
 
     /*
     |--------------------------------------------------------------------------
@@ -153,6 +153,8 @@ return [
         EllipseSynergie\ApiResponse\Laravel\ResponseServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Propaganistas\LaravelPhone\PhoneServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -212,6 +214,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

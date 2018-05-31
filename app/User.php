@@ -37,4 +37,9 @@ class User extends Authenticatable
     {
         return ('api' === \request()->route()->getPrefix()) ? $this->mobile_number : $this->email;
     }
+
+    public function fullName()
+    {
+        return ucwords($this->first_name . ' ' . $this->last_name);
+    }
 }
