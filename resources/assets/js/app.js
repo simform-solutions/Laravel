@@ -90,5 +90,6 @@ window.activeSlimScrollTo = function ($selector, height) {
 $(function () {
   init($('body'))
   activeSlimScrollTo($('.sidebar .menu'), '100%')
+  activeSlimScrollTo($('.table-responsive'), '100%')
   activeSlimScrollTo($('.navbar-right .dropdown-menu .body .menu'))
 })

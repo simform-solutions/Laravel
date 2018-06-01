@@ -20,5 +20,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['namespace' => 'Admin', 'as' => 'admin.', 'middleware' => 'role:admin'], function () {
         Route::get('dashboard', 'DashboardController@index')->name('dashboard');
         Route::resource('managers', 'ManagersController');
+        Route::get('managers-list', ['as' => 'managers.anyData', 'uses' => 'ManagersController@anyData']);
     });
 });

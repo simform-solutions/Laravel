@@ -16,3 +16,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
   .copy([
     'resources/assets/css/main.css'
   ], 'public/css')
+  .copy([
+    'resources/assets/js/managers-list.js'
+  ], 'public/js')

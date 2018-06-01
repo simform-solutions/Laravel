@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
@@ -41,5 +42,10 @@ class User extends Authenticatable
     public function fullName()
     {
         return ucwords($this->first_name . ' ' . $this->last_name);
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::createFromTimestamp(strtotime((string)$value))->diffForHumans();
     }
 }

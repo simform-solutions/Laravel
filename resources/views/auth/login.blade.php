@@ -27,7 +27,7 @@
                         <span class="input-group-addon">
                             <i class="material-icons">email</i>
                         </span>
-                        <div class="form-line{{ $errors->has('email') ? ' error' : '' }}">
+                        <div class="form-line focused{{ $errors->has('email') ? ' error' : '' }}">
                             {!! Form::email('email', null, ['class' => 'form-control' . ($errors->has('email') ? ' is-invalid' : ''), 'placeholder' => __('E-Mail Address'), 'required', 'autofocus', 'autocomplete' => 'off', 'id' => 'email']) !!}
                         </div>
                         @if ($errors->has('email'))

@@ -8,6 +8,7 @@ use App\User;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -94,6 +95,11 @@ class LoginController extends Controller
             $this->validate($request, ['facebook_id' => 'required|numeric']);
         } else {
             $this->defaultValidateLogin($request);
+            $this->validate($request, [
+                'mobile_number' => Rule::exists('users')->where(function ($query) {
+                    $query->whereNull('facebook_id');
+                })
+            ], ['mobile_number.exists' => __('validation.custom.exists.mobile_number_with_facebook')]);
         }
     }
 

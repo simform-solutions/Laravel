@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 
@@ -71,8 +72,16 @@ class ForgotPasswordController extends Controller
     protected function validateMobile(Request $request)
     {
         $this->validate($request, [
-            'mobile_number' => 'required|string|max:20|phone',
+            'mobile_number' => [
+                'required',
+                'string',
+                'max:20',
+                'phone',
+                Rule::exists('users')->where(function ($query) {
+                    $query->whereNull('facebook_id');
+                })
+            ],
             'mobile_number_country' => 'required_with:mobile_number'
-        ]);
+        ], ['mobile_number.exists' => __('validation.custom.exists.mobile_number_with_facebook')]);
     }
 }

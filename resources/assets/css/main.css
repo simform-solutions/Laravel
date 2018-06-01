@@ -7,3 +7,15 @@
     margin-top: 15px;
     margin-left: 10px;
 }
+
+.width-50 {
+    width: 50px !important;
+}
+
+.width-10 {
+    width: 10px !important;
+}
+
+.dataTable tbody td {
+    vertical-align: middle !important;
+}
