@@ -95,6 +95,11 @@ class LoginController extends Controller
             $this->validate($request, ['facebook_id' => 'required|numeric']);
         } else {
             $this->defaultValidateLogin($request);
+
+            $this->validate($request, [
+                'mobile_number' => 'exists:users'
+            ], ['mobile_number.exists' => __('auth.failed')]);
+
             $this->validate($request, [
                 'mobile_number' => Rule::exists('users')->where(function ($query) {
                     $query->whereNull('facebook_id');
