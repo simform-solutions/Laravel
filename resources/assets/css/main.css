@@ -19,3 +19,15 @@
 .dataTable tbody td {
     vertical-align: middle !important;
 }
+
+.dataTables_processing, .dataTables_empty {
+    text-align: center !important;
+}
+
+ul.header-dropdown {
+    list-style-type: none;
+}
+
+img.img_upload {
+    cursor: pointer;
+}

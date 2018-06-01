@@ -36,9 +36,9 @@
                     $__env->yieldContent('content'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/jquery/jquery.min.js'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/bootstrap/js/bootstrap.min.js'),
-                    Html::script('js/app.js'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/node-waves/waves.min.js'),
                     Html::script('node_modules/adminbsb-materialdesign/js/admin.js'),
+                    Html::script('js/app.js'),
                     $__env->yieldPushContent('scripts')
                 ],
                 [

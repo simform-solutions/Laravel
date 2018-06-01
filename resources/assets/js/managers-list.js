@@ -33,6 +33,9 @@ $(function () {
       { data: 'editAction', name: 'editAction', sortable: false, searchable: false },
       { data: 'deleteAction', name: 'deleteAction', sortable: false, searchable: false }
     ],
-    'order': [[ 5, 'desc' ]]
+    'order': [[ 5, 'desc' ]],
+    language: {
+      processing: $('.page-loader-wrapper').html()
+    }
   })
 })

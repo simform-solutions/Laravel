@@ -41,8 +41,10 @@
         Html::tag('section', [
             Html::tag('div', [
                 Html::tag('div', [
+                    Html::tag('div', [$__env->yieldContent('page_options')], ['class' => 'pull-right m-t--5']),
                     Html::tag('h2', [$__env->yieldContent('page_title')], ['class' => 'text-uppercase'])
                 ], ['class' => 'block-header']),
+                Html::tag('div', '', ['class' => 'clearfix m-t-10']),
                 $__env->yieldContent('page_content')
             ], ['class' => 'container-fluid'])
         ], ['class' => 'content'])

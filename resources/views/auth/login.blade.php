@@ -5,7 +5,6 @@
 @section('body_classes') login-page @endsection
 
 @push('scripts')
-    <!-- JQuery Validation Js -->
     <script type="text/javascript" src="{{ asset('node_modules/adminbsb-materialdesign/plugins/jquery-validation/jquery.validate.js') }}"></script>
 @endpush
 

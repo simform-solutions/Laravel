@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute($value)
     {
-        return $value ?: asset(env('USER_DEFAULT_AVATAR'));
+        return asset($value ? $this->getMyUploadDirFor(true) . $value : env('USER_DEFAULT_AVATAR'));
     }
 
     public function getEmailForPasswordReset()
@@ -47,5 +47,32 @@ class User extends Authenticatable
     public function getUpdatedAtAttribute($value)
     {
         return Carbon::createFromTimestamp(strtotime((string)$value))->diffForHumans();
+    }
+
+    public function doFileUpload($fileKey, $dbColumn, &$modelObj, $saveIt = false, $additionalCondition = true)
+    {
+        if ($additionalCondition && request()->hasFile($fileKey)) {
+            $file = request()->file($fileKey);
+            if ($file->isValid()) {
+                $userDir = $this->getMyUploadDirFor();
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs($userDir, $fileName);
+                !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . $modelObj->getAttributes()[$dbColumn]);
+                $modelObj->$dbColumn = $fileName;
+                !$saveIt || $modelObj->save();
+            }
+        }
+    }
+
+    public function getMyUploadDirFor($toDisplay = false, $dir = ''): string
+    {
+        return env($toDisplay ? 'USER_UPLOAD_DISPLAY_PATH' : 'USER_UPLOAD_PATH') . $this->id . $dir . '/';
+    }
+
+    public static function checkField($field = 'email', $id = null)
+    {
+        $user = self::where($field, \request()->get($field));
+        !$id || $user = $user->where('id', '!=', $id);
+        return $user->first() ? 'false' : 'true';
     }
 }
