@@ -54,6 +54,11 @@ class ForgotPasswordController extends Controller
         if ('api' === \request()->route()->getPrefix()) {
             $this->validateMobile($request);
             if ($user = User::whereMobileNumber($request->get('mobile_number'))->first()) {
+                if ($user->facebook_id) {
+                    throw ValidationException::withMessages([
+                        'mobile_number' => [__('validation.custom.exists.mobile_number_with_facebook')],
+                    ]);
+                }
                 return $this->response->withArray([], ['X-Session-Token' => $this->broker()->getRepository()->create($user)], JSON_FORCE_OBJECT);
             }
             throw ValidationException::withMessages([
@@ -72,16 +77,8 @@ class ForgotPasswordController extends Controller
     protected function validateMobile(Request $request)
     {
         $this->validate($request, [
-            'mobile_number' => [
-                'required',
-                'string',
-                'max:20',
-                'phone',
-                Rule::exists('users')->where(function ($query) {
-                    $query->whereNull('facebook_id');
-                })
-            ],
+            'mobile_number' => 'required|string|max:20|phone',
             'mobile_number_country' => 'required_with:mobile_number'
-        ], ['mobile_number.exists' => __('validation.custom.exists.mobile_number_with_facebook')]);
+        ]);
     }
 }
