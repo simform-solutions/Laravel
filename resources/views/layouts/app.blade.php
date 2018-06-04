@@ -21,6 +21,11 @@
                     Html::style('node_modules/adminbsb-materialdesign/plugins/node-waves/waves.min.css'),
                     Html::style('node_modules/adminbsb-materialdesign/plugins/animate-css/animate.min.css'),
                     Html::style('node_modules/adminbsb-materialdesign/css/style.min.css'),
+                    Html::tag('style', ['
+                        .submit-spinner-layer {
+                            border-color: inherit !important;
+                        }
+                    '], ['media' => 'all', 'type' => 'text/css']),
                     $__env->yieldPushContent('styles'),
                     "<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
                     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

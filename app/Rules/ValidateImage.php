@@ -34,6 +34,6 @@ class ValidateImage implements Rule
      */
     public function message()
     {
-        return __('validation.custom.invalidImage');
+        return __('validation.custom.invalid');
     }
 }

@@ -6,7 +6,28 @@
 
 @push('styles')
     {!! Html::style('node_modules/lightbox2/dist/css/lightbox.min.css') !!}
+    {!! Html::style('node_modules/adminbsb-materialdesign/plugins/bootstrap-select/css/bootstrap-select.min.css') !!}
     {!! Html::style('node_modules/adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css') !!}
+    <style type="text/css">
+        .mobile-phone-number-label {
+            font-weight: normal;
+            color: #aaa;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    {!! Html::script('node_modules/lightbox2/dist/js/lightbox.min.js') !!}
+    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-validation/jquery.validate.js') !!}
+    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/bootstrap-select/js/bootstrap-select.min.js') !!}
+    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-datatable/jquery.dataTables.js') !!}
+    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js') !!}
+    {!! Html::tag('script', [
+        'var managersListURL = "' . route('admin.managers.anyData') . '"'
+    ], ['type' => 'text/javascript']) !!}
+    {!! Html::script('js/managers-list.js') !!}
+    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-inputmask/jquery.inputmask.bundle.js') !!}
+    {!! Html::script('js/manager-form.js') !!}
 @endpush
 
 @section('page_options')
@@ -25,17 +46,6 @@
         </li>
     </ul>
 @endsection
-
-@push('scripts')
-    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-validation/jquery.validate.js') !!}
-    {!! Html::script('node_modules/lightbox2/dist/js/lightbox.min.js') !!}
-    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-datatable/jquery.dataTables.js') !!}
-    {!! Html::script('node_modules/adminbsb-materialdesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js') !!}
-    <script type="text/javascript">
-      var managersListURL = "{!! route('admin.managers.anyData') !!}"
-    </script>
-    {!! Html::script('js/managers-list.js') !!}
-@endpush
 
 @section('page_content')
     <div class="row clearfix">
