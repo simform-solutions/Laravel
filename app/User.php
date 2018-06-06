@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute($value)
     {
-        return asset($value ? $this->getMyUploadDirFor(true) . $value : env('USER_DEFAULT_AVATAR'));
+        return $value ?: asset(env('USER_DEFAULT_AVATAR'));
     }
 
     public function getEmailForPasswordReset()
@@ -58,7 +58,7 @@ class User extends Authenticatable
                 $fileName = time() . '.' . $file->getClientOriginalExtension();
                 $file->storeAs($userDir, $fileName);
                 !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . $modelObj->getAttributes()[$dbColumn]);
-                $modelObj->$dbColumn = $fileName;
+                $modelObj->$dbColumn = asset($this->getMyUploadDirFor(true) . $fileName);
                 !$saveIt || $modelObj->save();
             }
         }
