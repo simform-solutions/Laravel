@@ -49,16 +49,24 @@ class User extends Authenticatable
         return Carbon::createFromTimestamp(strtotime((string)$value))->diffForHumans();
     }
 
-    public function doFileUpload($fileKey, $dbColumn, &$modelObj, $saveIt = false, $additionalCondition = true)
+    public function doFileUpload($fileKey, $dbColumn, &$modelObj, $saveIt = false, $fileSystem = 's3', $additionalCondition = true)
     {
         if ($additionalCondition && request()->hasFile($fileKey)) {
             $file = request()->file($fileKey);
             if ($file->isValid()) {
-                $userDir = $this->getMyUploadDirFor();
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs($userDir, $fileName);
-                !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . $modelObj->getAttributes()[$dbColumn]);
-                $modelObj->$dbColumn = asset($this->getMyUploadDirFor(true) . $fileName);
+                $fileName = env('USER_AVATAR_PREFIX') . time() . '.' . $file->getClientOriginalExtension();
+
+                if ($fileSystem === 's3') {
+                    $s3 = \Storage::disk('s3');
+                    $filePath = env('AWS_USER_BUCKET_NAME') . $fileName;
+                    !$s3->put($filePath, file_get_contents($file), 'public') || $modelObj->$dbColumn = env('AWS_URL') . env('AWS_BUCKET') . $filePath;
+                } else {
+                    $userDir = $this->getMyUploadDirFor();
+                    $file->storeAs($userDir, $fileName);
+                    !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . pathinfo($modelObj->getAttributes()[$dbColumn])['basename']);
+                    $modelObj->$dbColumn = asset($this->getMyUploadDirFor(true) . $fileName);
+                }
+
                 !$saveIt || $modelObj->save();
             }
         }

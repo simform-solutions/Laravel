@@ -1,6 +1,5 @@
 var allowFormAjaxProcess = true
 var bufferCache = null
-var buttonText = null
 
 window.init = function ($selector) {
   const $forms = $selector.find('form.jquery-validate')
@@ -60,23 +59,24 @@ window.readURL = function (input, target) {
 }
 
 window.toggleSubmitButton = function ($form, makeDisable) {
-  var $submitButton = $form.find('[type=submit]')
+  var $submitButton = $form.find(':submit')
   if ($submitButton.length > 0) {
     $submitButton.prop('disabled', makeDisable)
     if (makeDisable) {
-      var buttonWidth = $submitButton.width()
-      bufferCache = $submitButton.find('i.fa').remove()
-      buttonText = $submitButton.text()
-      $submitButton.text('')
-      $submitButton.prepend('<div class="pre-loader" style="width: ' + buttonWidth + 'px">' +
-        '                       <i class="fa fa-spinner fa-spin"></i>' +
-        '                     </div>\n')
+      bufferCache = $submitButton.html()
+      $submitButton.html('<div class="preloader" style="width: 16px; height: 16px;">\n' +
+                      '        <div class="spinner-layer submit-spinner-layer">\n' +
+                      '        <div class="circle-clipper left">\n' +
+                      '        <div class="circle"></div>\n' +
+                      '        </div>\n' +
+                      '        <div class="circle-clipper right">\n' +
+                      '        <div class="circle"></div>\n' +
+                      '        </div>\n' +
+                      '        </div>\n' +
+                      '        </div>')
     } else {
-      $submitButton.find('.pre-loader').remove()
-      $submitButton.text(buttonText)
-      bufferCache.prependTo($submitButton)
+      $submitButton.html(bufferCache)
       bufferCache = null
-      buttonText = null
     }
   }
   allowFormAjaxProcess = !makeDisable
@@ -138,10 +138,10 @@ $(function () {
     $('.modal').on('hidden.bs.modal', function () {
       $(this).removeData('bs.modal').find('.modal-content').empty().html('')
     }).on('loaded.bs.modal', function () {
+      init($('.modal.in'))
       if ($('#manager-form').length > 0) {
         initManagerForm()
       }
-      init($('.modal.in'))
     })
   }
 

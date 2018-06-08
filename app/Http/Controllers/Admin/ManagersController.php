@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Transformers\UserTransformer;
 use App\User;
 use EllipseSynergie\ApiResponse\Laravel\Response;
 use Illuminate\Http\Request;
@@ -59,7 +60,10 @@ class ManagersController extends Controller
 
     public function edit($manager)
     {
-        return view('admin.managers.form', ['user' => User::find($manager)]);
+        $user = User::find($manager);
+        $user->phone_number = substr($user->mobile_number, -10);
+        $user->country_code = str_replace($user->phone_number, '', $user->mobile_number);
+        return view('admin.managers.form', ['user' => $user]);
     }
 
     public function checkEmail($manager = null)
@@ -87,7 +91,7 @@ class ManagersController extends Controller
             $manager || $user->attachRole(2);
             $user->doFileUpload('profile_picture', 'avatar', $user, true);
         }
-        return redirect()->back();
+        return $this->response->withItem($user, new UserTransformer);
     }
 
     /**
