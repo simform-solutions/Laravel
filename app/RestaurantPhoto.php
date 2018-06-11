@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RestaurantTiming extends Model
+class RestaurantPhoto extends Model
 {
     protected $fillable = [
-        'day_of_week', 'from_time', 'to_time'
+        'title', 'photo'
     ];
 
     public function restaurant()

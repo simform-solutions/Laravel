@@ -17,4 +17,9 @@ class Restaurant extends Model
     {
         return $this->belongsTo(User::class, 'manager_id', 'id');
     }
+
+    public function foodCategories()
+    {
+        return $this->belongsToMany(FoodCategory::class, 'restaurant_food_categories', 'restaurant_id', 'food_category_id')->withPivot('is_special');
+    }
 }
