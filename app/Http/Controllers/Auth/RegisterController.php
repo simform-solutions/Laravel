@@ -92,10 +92,10 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         if ('api' === $request->route()->getPrefix()) {
-            auth()->logout();
-            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
+            \auth()->logout();
+            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => \encrypt($user->id)]);
         }
-        return redirect()->intended($this->redirectTo);
+        return \redirect()->intended($this->redirectTo);
     }
 
     public function checkMobileNumber(Request $request)

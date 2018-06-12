@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->unsignedBigInteger('facebook_id')->nullable()->unique()->index();
             $table->boolean('is_active')->default(true);
-            $table->rememberToken();
+            $table->string('remember_token')->nullable()->index();
             $table->timestamps();
         });
     }

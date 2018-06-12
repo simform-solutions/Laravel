@@ -26,7 +26,7 @@ class CreateRestaurantsTable extends Migration
             $table->point('location')->nullable()->index();
             $table->text('description')->nullable();
             $table->enum('price_range', [1, 2, 3])->default(1)->index();
-            $table->string('time_zone', '10')->index()->nullable();
+            $table->string('time_zone', 10)->index()->nullable();
             $table->boolean('is_active')->default(true)->index();
             $table->timestamps();
         });

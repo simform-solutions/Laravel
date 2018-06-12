@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'mobile_number', 'email', 'password', 'avatar', 'facebook_id'
+        'first_name', 'last_name', 'mobile_number', 'email', 'password', 'avatar', 'facebook_id', 'device_type', 'push_token', 'time_zone', 'last_login_at'
     ];
 
     /**
@@ -29,9 +29,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $dates = [
+        'last_login_at'
+    ];
+
     public function getAvatarAttribute($value)
     {
-        return $value ?: asset(env('USER_DEFAULT_AVATAR'));
+        return $value ?: \asset(\env('USER_DEFAULT_AVATAR'));
     }
 
     public function getEmailForPasswordReset()
@@ -51,20 +55,20 @@ class User extends Authenticatable
 
     public function doFileUpload($fileKey, $dbColumn, &$modelObj, $saveIt = false, $fileSystem = 's3', $additionalCondition = true)
     {
-        if ($additionalCondition && request()->hasFile($fileKey)) {
-            $file = request()->file($fileKey);
+        if ($additionalCondition && \request()->hasFile($fileKey)) {
+            $file = \request()->file($fileKey);
             if ($file->isValid()) {
-                $fileName = env('USER_AVATAR_PREFIX') . time() . '.' . $file->getClientOriginalExtension();
+                $fileName = \env('USER_AVATAR_PREFIX') . \time() . '.' . $file->getClientOriginalExtension();
 
                 if ($fileSystem === 's3') {
                     $s3 = \Storage::disk('s3');
-                    $filePath = env('AWS_USER_BUCKET_NAME') . $fileName;
-                    !$s3->put($filePath, file_get_contents($file), 'public') || $modelObj->$dbColumn = env('AWS_URL') . env('AWS_BUCKET') . $filePath;
+                    $filePath = \env('AWS_USER_BUCKET_NAME') . $fileName;
+                    !$s3->put($filePath, \file_get_contents($file), 'public') || $modelObj->$dbColumn = \env('AWS_URL') . \env('AWS_BUCKET') . $filePath;
                 } else {
                     $userDir = $this->getMyUploadDirFor();
                     $file->storeAs($userDir, $fileName);
-                    !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . pathinfo($modelObj->getAttributes()[$dbColumn])['basename']);
-                    $modelObj->$dbColumn = asset($this->getMyUploadDirFor(true) . $fileName);
+                    !@$modelObj->getAttributes()[$dbColumn] || \Storage::delete($userDir . \pathinfo($modelObj->getAttributes()[$dbColumn])['basename']);
+                    $modelObj->$dbColumn = \asset($this->getMyUploadDirFor(true) . $fileName);
                 }
 
                 !$saveIt || $modelObj->save();
@@ -74,7 +78,7 @@ class User extends Authenticatable
 
     public function getMyUploadDirFor($toDisplay = false, $dir = ''): string
     {
-        return env($toDisplay ? 'USER_UPLOAD_DISPLAY_PATH' : 'USER_UPLOAD_PATH') . $this->id . $dir . '/';
+        return \env($toDisplay ? 'USER_UPLOAD_DISPLAY_PATH' : 'USER_UPLOAD_PATH') . $this->id . $dir . '/';
     }
 
     public static function checkField($field = 'email', $id = null)

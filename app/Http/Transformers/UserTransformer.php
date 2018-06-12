@@ -22,7 +22,8 @@ class UserTransformer extends TransformerAbstract
             'last_name' => $user->last_name,
             'email' => $user->email,
             'mobile_number' => $user->mobile_number,
-            'avatar' => $user->avatar
+            'avatar' => $user->avatar,
+            'last_login' => (string) $user->last_login_at
         ], $this->extra);
     }
 }

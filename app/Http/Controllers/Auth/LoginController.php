@@ -29,6 +29,7 @@ class LoginController extends Controller
         attemptLogin as defaultAttemptLogin;
         username as defaultUsername;
         sendFailedLoginResponse as defaultSendFailedLoginResponse;
+        logout as defaultLogout;
     }
 
     /**
@@ -64,23 +65,23 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if (!$user->is_active) {
-            auth()->logout();
+            \auth()->logout();
             throw ValidationException::withMessages([
                 $this->username() => [__('auth.account_inactive')],
             ]);
         }
 
         if ('api' === $request->route()->getPrefix()) {
-            auth()->logout();
-            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
+            \auth()->logout();
+            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => \encrypt($user->id)]);
         } elseif (!$user->hasRole('admin') && !$user->hasRole('restaurant_manager')) {
-            auth()->logout();
+            \auth()->logout();
             throw ValidationException::withMessages([
                 $this->username() => [__('auth.failed')],
             ]);
         }
 
-        return redirect()->intended($this->redirectTo);
+        return \redirect()->intended($this->redirectTo);
     }
 
     /**
@@ -96,15 +97,17 @@ class LoginController extends Controller
         } else {
             $this->defaultValidateLogin($request);
 
-            $this->validate($request, [
-                'mobile_number' => 'exists:users'
-            ], ['mobile_number.exists' => __('auth.failed')]);
+            if ('api' === $request->route()->getPrefix()) {
+                $this->validate($request, [
+                    'mobile_number' => 'exists:users'
+                ], ['mobile_number.exists' => __('auth.failed')]);
 
-            $this->validate($request, [
-                'mobile_number' => Rule::exists('users')->where(function ($query) {
-                    $query->whereNull('facebook_id');
-                })
-            ], ['mobile_number.exists' => __('validation.custom.exists.mobile_number_with_facebook')]);
+                $this->validate($request, [
+                    'mobile_number' => Rule::exists('users')->where(function ($query) {
+                        $query->whereNull('facebook_id');
+                    })
+                ], ['mobile_number.exists' => __('validation.custom.exists.mobile_number_with_facebook')]);
+            }
         }
     }
 
@@ -121,6 +124,7 @@ class LoginController extends Controller
                 $this->guard()->login($user);
                 return $this->guard()->check();
             }
+            return false;
         }
 
         return $this->defaultAttemptLogin($request);
@@ -147,5 +151,21 @@ class LoginController extends Controller
         }
 
         return $this->defaultUsername();
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        if ('api' === $request->route()->getPrefix()) {
+            \auth()->user()->fill(['push_token' => null, 'last_login_at' => null])->save();
+            return $this->response->withArray([], [], JSON_FORCE_OBJECT);
+        }
+
+        return $this->defaultLogout($request);
     }
 }

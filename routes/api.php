@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,8 +19,13 @@ Route::group(['as' => 'api.'], function () {
         Route::post('verify-mobile-number', ['uses' => 'ForgotPasswordController@sendResetLinkEmail', 'as' => 'verify-mobile-number']);
         Route::post('password/reset', ['middleware' => ['web'], 'uses' => 'ResetPasswordController@reset', 'as' => 'password.reset']);
     });
-});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::group(['middleware' => 'auth.api'], function () {
+        Route::get('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
+        Route::patch('update-profile', ['uses' => 'ProfileController@update', 'as' => 'update-profile']);
+
+        Route::group(['middleware' => 'role:customer'], function () {
+
+        });
+    });
 });

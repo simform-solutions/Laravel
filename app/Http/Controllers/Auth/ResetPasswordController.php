@@ -92,9 +92,9 @@ class ResetPasswordController extends Controller
     protected function sendResetResponse($response)
     {
         if ('api' === \request()->route()->getPrefix()) {
-            $user = auth()->user();
-            auth()->logout();
-            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => encrypt(time())]);
+            $user = \auth()->user();
+            \auth()->logout();
+            return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => \encrypt($user->id)]);
         }
 
         return $this->defaultSendResetResponse($response);
