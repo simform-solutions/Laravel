@@ -17,5 +17,6 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'account_inactive' => 'Your account is deactivated.',
     'unauthorized_access' => 'Operation not allowed, Unauthorized access!',
+    'not_permitted' => 'You do not have permission to access.',
     'invalid_session' => 'Oops! Your session is either expired or invalid.'
 ];

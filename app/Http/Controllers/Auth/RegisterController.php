@@ -92,6 +92,7 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         if ('api' === $request->route()->getPrefix()) {
+            $user->attachRole(4);
             \auth()->logout();
             return $this->response->withItem($user, new UserTransformer, null, [], ['X-Session-Token' => \encrypt($user->id)]);
         }

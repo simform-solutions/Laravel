@@ -57,8 +57,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ValidationException && 'api' === $request->route()->getPrefix()) {
-            return $this->response->errorUnprocessable($exception->validator->errors()->first());
+        if ('api' === $request->route()->getPrefix()) {
+            if ($exception instanceof ValidationException) {
+                return $this->response->errorUnprocessable($exception->validator->errors()->first());
+            } elseif ($exception->getStatusCode() === 403) {
+                return $this->response->errorForbidden(__('auth.not_permitted'));
+            }
         }
         return parent::render($request, $exception);
     }

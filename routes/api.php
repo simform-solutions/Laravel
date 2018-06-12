@@ -24,8 +24,8 @@ Route::group(['as' => 'api.'], function () {
         Route::get('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::patch('update-profile', ['uses' => 'ProfileController@update', 'as' => 'update-profile']);
 
-        Route::group(['middleware' => 'role:customer'], function () {
-
+        Route::group(['middleware' => 'role:customer', 'as' => 'customer.', 'namespace' => 'Customer'], function () {
+            Route::post('restaurants-list', ['uses' => 'RestaurantsController@getList', 'as' => 'restaurants-list']);
         });
     });
 });
