@@ -23,7 +23,8 @@ class CreateRestaurantsTable extends Migration
             $table->string('email', 100)->nullable()->index()->unique();
             $table->float('avg_ratings', 10, 2)->default(0)->index();
             $table->string('photo')->nullable();
-            $table->point('location')->nullable()->index();
+            $table->point('location');
+            $table->spatialIndex('location');
             $table->text('description')->nullable();
             $table->enum('price_range', [1, 2, 3])->default(1)->index();
             $table->string('time_zone', 10)->index()->nullable();

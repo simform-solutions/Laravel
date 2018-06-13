@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
         if ('api' === $request->route()->getPrefix()) {
             if ($exception instanceof ValidationException) {
                 return $this->response->errorUnprocessable($exception->validator->errors()->first());
-            } elseif ($exception->getStatusCode() === 403) {
+            } elseif (method_exists($exception, 'getStatusCode') && $exception->getStatusCode() === 403) {
                 return $this->response->errorForbidden(__('auth.not_permitted'));
             }
         }

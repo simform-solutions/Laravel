@@ -19,6 +19,9 @@ class RestaurantsController extends Controller
 
     public function getList(RestaurantsList $request)
     {
-        //dd(Restaurant::distance('location', new Point($request->get('latitude'), $request->get('longitude')), 5)->get());
+        dd(Restaurant::distance('location', new Point($request->get('latitude'), $request->get('longitude')), env('NEAR_BY_RADIUS_IN_KM'))
+            ->with(['foodCategories' => function ($fq) {
+                return $fq->orderBy('is_special', 'DESC');
+            }])->get()->toArray());
     }
 }

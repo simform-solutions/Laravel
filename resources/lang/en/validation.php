@@ -132,7 +132,8 @@ return [
         'exists' => [
             'mobile_number' => 'The mobile number does not exists.',
             'mobile_number_with_facebook' => 'The mobile number is already associated with a Facebook Account.'
-        ]
+        ],
+        'current_password_mismatch' => 'Current password is invalid.'
     ],
 
     /*

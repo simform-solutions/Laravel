@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\ValidateImage;
+use App\Rules\ValidateOldPassword;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProfileRequest extends FormRequest
@@ -28,7 +29,11 @@ class ProfileRequest extends FormRequest
             'first_name' => 'string|max:30',
             'last_name' => 'string|max:30',
             'email' => 'string|email|max:100|unique:users,email,' . \auth()->user()->getAuthIdentifier(),
-            'password' => 'string|min:6|max:20',
+            'password' => 'required_with:current_password|string|min:6|max:20|different:current_password',
+            'current_password' => [
+                'required_with:password',
+                new ValidateOldPassword
+            ],
             'avatar' => [
                 new ValidateImage,
                 'unique:users,avatar,' . \auth()->user()->getAuthIdentifier()
