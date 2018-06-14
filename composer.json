@@ -28,7 +28,8 @@
     },
     "autoload": {
         "files": [
-            "app/Helpers/Navigation.php"
+            "app/Helpers/Navigation.php",
+            "app/Helpers/Eloquent/Restaurant.php"
         ],
         "classmap": [
             "database/seeds",

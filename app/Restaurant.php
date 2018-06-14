@@ -33,8 +33,9 @@ class Restaurant extends Model
 
     public function scopeDistance($query, $geometryColumn, $geometry, $distance)
     {
-        $mFactor = env('MULTIPLY_FACTOR_FOR_DEGREE_TO_KM');
-        return $query->selectRaw("*, st_distance(`{$geometryColumn}`, ST_GeomFromText('{$geometry->toWkt()}')) * {$mFactor} as distance")->havingRaw("distance <= {$distance}");
+        $mFactor = env('MULTIPLY_FACTOR_FOR_DEGREE_TO_MILES');
+        $distanceCalculation = "st_distance(`{$geometryColumn}`, ST_GeomFromText('{$geometry->toWkt()}')) * {$mFactor}";
+        return $query->selectRaw("*, {$distanceCalculation} as distance")->whereRaw("{$distanceCalculation} <= {$distance}")->orderBy('distance');
     }
 
     public function timings()
@@ -50,6 +51,6 @@ class Restaurant extends Model
     public function getCurrentStatusAttribute()
     {
         $allTimings = $this->timings;
-        dd($allTimings->where('day_of_week', '=', Carbon::now()->dayOfWeek)->first());
+        dd($allTimings->where('day_of_week', '=', Carbon::now()->dayOfWeek));
     }
 }

@@ -25,7 +25,17 @@ class RestaurantsList extends FormRequest
     {
         return [
             'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric'
+            'longitude' => 'required|numeric',
+            'get_recently_visited' => 'required|boolean',
+            'perPage' => 'required|integer|min:1',
+            'page' => 'required|integer|min:1',
+            'radius' => 'required|integer|min:1',
+            'cost_of_food' => 'array|max:3',
+            'cost_of_food.*' => 'in:1,2,3|distinct',
+            'food_categories' => 'array',
+            'food_categories.*' => 'exists:food_categories,id',
+            'hours_of_operations' => 'array|max:4',
+            'hours_of_operations.*' => 'in:1,2,3,4|distinct'
         ];
     }
 }

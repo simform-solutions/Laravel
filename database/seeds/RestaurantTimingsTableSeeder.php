@@ -14,15 +14,15 @@ class RestaurantTimingsTableSeeder extends Seeder
         $restaurant = \App\Restaurant::wherePhone('+9107940171133')->first();
 
         $timings = [
-            0 => [
+            1 => [
                 'from_time' => '10:00:00',
                 'to_time'   => '22:00:00'
             ],
-            1 => [
+            2 => [
                 'from_time' => '09:00:00',
                 'to_time'   => '20:00:00'
             ],
-            3 => [
+            4 => [
                 [
                     'from_time' => '08:00:00',
                     'to_time'   => '12:00:00'
@@ -32,7 +32,7 @@ class RestaurantTimingsTableSeeder extends Seeder
                     'to_time'   => '21:00:00'
                 ]
             ],
-            5 => [
+            6 => [
                 [
                     'from_time' => '07:00:00',
                     'to_time'   => '11:00:00'
@@ -46,7 +46,7 @@ class RestaurantTimingsTableSeeder extends Seeder
                     'to_time'   => '23:00:00'
                 ]
             ],
-            6 => [
+            7 => [
                 'from_time' => '15:00:00',
                 'to_time'   => '24:00:00'
             ],
