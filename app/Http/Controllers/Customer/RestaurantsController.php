@@ -55,7 +55,7 @@ class RestaurantsController extends Controller
             }
         })->with(['foodCategories' => function ($fq) {
             return $fq->orderBy('is_special', 'DESC');
-        }]);
+        }])->whereIsActive(true)->with('photos');
 
         if ($request->request->has('cost_of_food') && count($request->get('cost_of_food')) > 0) {
             $nearByRestaurants->whereIn('price_range', $request->get('cost_of_food'));

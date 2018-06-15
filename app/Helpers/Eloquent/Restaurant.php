@@ -10,7 +10,7 @@ function mustNotBeAnOpenRestaurant(&$query)
     $query->whereNotExists(function ($subQuery) use ($from, $to, $current, $currentDateTimeObj) {
         $subQuery->from('restaurant_timings')
                  ->whereRaw('`restaurants`.`id` = `restaurant_timings`.`restaurant_id`')
-                 ->whereDayOfWeek($currentDateTimeObj->dayOfWeek)
+                 ->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek)
                  ->whereRaw("{$from} <= {$current}")
                  ->whereRaw("{$to} > {$current}");
     });
@@ -23,7 +23,7 @@ function mustBeClosedRestaurants(&$query)
     $current = \func_get_arg(3);
     $currentDateTimeObj = \func_get_arg(4);
 
-    $query->whereDayOfWeek($currentDateTimeObj->dayOfWeek)
+    $query->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek)
           ->where(function ($subQuery) use ($from, $to, $current) {
             $subQuery->whereRaw("{$from} > {$current}")->orWhereRaw("{$to} <= {$current}");
           });
@@ -35,7 +35,7 @@ function mustOpenAtLeastOnceToday(&$query)
     $currentDateTimeObj = \func_get_arg(1);
     $query->from('restaurant_timings')
           ->whereRaw('`restaurants`.`id` = `restaurant_timings`.`restaurant_id`')
-          ->whereDayOfWeek($currentDateTimeObj->dayOfWeek);
+          ->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek);
 }
 
 function getMeAllClosedRestaurants(&$query)
@@ -71,7 +71,7 @@ function getMeAllOpenRestaurants(&$query)
     $current = \func_get_arg(3);
     $currentDateTimeObj = \func_get_arg(4);
 
-    $query->whereDayOfWeek($currentDateTimeObj->dayOfWeek)
+    $query->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek)
           ->whereRaw("{$from} <= {$current}")
           ->whereRaw("DATE_SUB({$to}, INTERVAL 1 HOUR) > {$current}");
 }
@@ -95,7 +95,7 @@ function getMeAllOpeningSoonRestaurants(&$query)
     $current = \func_get_arg(3);
     $currentDateTimeObj = \func_get_arg(4);
 
-    $query->whereDayOfWeek($currentDateTimeObj->dayOfWeek)
+    $query->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek)
         ->whereRaw("{$from} > {$current}")
         ->whereRaw("{$from} <= DATE_ADD({$current}, INTERVAL 1 HOUR)");
 
@@ -120,7 +120,7 @@ function getMeAllClosingSoonRestaurants(&$query)
     $current = \func_get_arg(3);
     $currentDateTimeObj = \func_get_arg(4);
 
-    $query->whereDayOfWeek($currentDateTimeObj->dayOfWeek)
+    $query->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek)
           ->whereRaw("{$to} > {$current}")
           ->whereRaw("{$to} < DATE_ADD({$current}, INTERVAL 1 HOUR)");
 }

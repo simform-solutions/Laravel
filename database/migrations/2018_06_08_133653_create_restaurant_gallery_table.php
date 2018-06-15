@@ -15,7 +15,6 @@ class CreateRestaurantGalleryTable extends Migration
     {
         Schema::create('restaurant_photos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 30)->nullable();
             $table->unsignedInteger('restaurant_id')->index();
             $table->foreign('restaurant_id')->references('id')->on('restaurants')->onUpdate('cascade')->onDelete('cascade');
             $table->string('photo');

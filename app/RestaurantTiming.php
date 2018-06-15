@@ -10,6 +10,10 @@ class RestaurantTiming extends Model
         'day_of_week', 'from_time', 'to_time'
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at', 'restaurant_id'
+    ];
+
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');

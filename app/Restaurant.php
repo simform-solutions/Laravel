@@ -45,12 +45,57 @@ class Restaurant extends Model
 
     public function getDistanceAttribute($value)
     {
-        return number_format($value, 1);
+        return (float) number_format($value, 1);
+    }
+
+    public function getPriceRangeAttribute($value)
+    {
+        return (int) $value;
     }
 
     public function getCurrentStatusAttribute()
     {
+        $theStatus = 2;
         $allTimings = $this->timings;
-        dd($allTimings->where('day_of_week', '=', Carbon::now()->dayOfWeek));
+        $currentDateTimeObj = Carbon::now();
+        $todaySchedules = $allTimings->where('day_of_week', '=', $currentDateTimeObj->dayOfWeek);
+
+        if ($todaySchedules->count() > 0) {
+            foreach ($todaySchedules as $todaySchedule) {
+                $fromDateTimeObj = $currentDateTimeObj->copy()->setTimeFromTimeString($todaySchedule->from_time);
+                $toDateTimeObj = $currentDateTimeObj->copy()->setTimeFromTimeString($todaySchedule->to_time);
+
+                if ($fromDateTimeObj->lessThanOrEqualTo($currentDateTimeObj) && $toDateTimeObj->copy()->subHour()->greaterThan($currentDateTimeObj)) {
+                    $theStatus = 1;
+                    break;
+                } elseif ($fromDateTimeObj->greaterThan($currentDateTimeObj) && $currentDateTimeObj->copy()->addHour()->greaterThan($fromDateTimeObj)) {
+                    $theStatus = 3;
+                    break;
+                } elseif ($toDateTimeObj->greaterThan($currentDateTimeObj) && $currentDateTimeObj->copy()->addHour()->greaterThan($toDateTimeObj)) {
+                    $theStatus = 4;
+                    break;
+                }
+            }
+        }
+
+        return $theStatus;
+    }
+
+    public function getPhotoAttribute($value)
+    {
+        return $value ?: \asset(\env('RESTAURANT_DEFAULT_IMAGE'));
+    }
+
+    public function getLocationAttribute($value)
+    {
+        return [
+            'latitude' => $value->getLat(),
+            'longitude' => $value->getLng()
+        ];
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(RestaurantPhoto::class, 'restaurant_id', 'id');
     }
 }
