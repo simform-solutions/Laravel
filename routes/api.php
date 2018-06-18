@@ -27,5 +27,9 @@ Route::group(['as' => 'api.'], function () {
         Route::group(['middleware' => 'role:customer', 'as' => 'customer.', 'namespace' => 'Customer'], function () {
             Route::post('restaurants-list', ['uses' => 'RestaurantsController@getList', 'as' => 'restaurants-list']);
         });
+
+        Route::group(['middleware' => ['role:customer'], 'as' => 'app-user.common.'], function () {
+            Route::get('all-food-categories', ['uses' => 'FoodCategoriesController@getList', 'as' => 'food-categories-list']);
+        });
     });
 });

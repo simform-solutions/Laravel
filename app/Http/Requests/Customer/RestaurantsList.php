@@ -26,7 +26,6 @@ class RestaurantsList extends FormRequest
         return [
             'latitude'  => 'required|numeric',
             'longitude' => 'required|numeric',
-            'get_recently_visited' => 'required|boolean',
             'perPage' => 'required|integer|min:1',
             'page' => 'required|integer|min:1',
             'radius' => 'required|integer|min:1',
