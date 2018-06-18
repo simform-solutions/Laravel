@@ -16,7 +16,7 @@ class Restaurant extends Model
     use SpatialTrait, Mutable;
     use Eloquence {
         Eloquence::newEloquentBuilder insteadof SpatialTrait;
-        Eloquence::newBaseQueryBuilder insteadof Model;
+        Eloquence::newBaseQueryBuilder insteadof SpatialTrait;
     }
 
     protected $spatialFields = [
