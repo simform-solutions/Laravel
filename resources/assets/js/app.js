@@ -108,6 +108,45 @@ window.formAJAXError = function (jqXHR) {
   showNotification(jqXHR.responseJSON.message, 'danger')
 }
 
+window.showNotification = function (colorName, title, icon, message, url, animateEnter, animateExit) {
+  const allowDismiss = true
+  icon = typeof icon === 'undefined' ? 'notifications' : icon
+  message = typeof message === 'undefined' ? '' : message
+  url = typeof url === 'undefined' ? '#' : url
+  colorName = typeof colorName === 'undefined' ? 'bg-black' : colorName
+
+  $.notify({
+    title: title,
+    message: message,
+    url: url
+  },
+  {
+    type: colorName,
+    allow_dismiss: allowDismiss,
+    newest_on_top: true,
+    timer: 1500,
+    placement: {
+      from: 'top',
+      align: 'right'
+    },
+    animate: {
+      enter: typeof animateEnter === 'undefined' ? 'animated fadeInRight' : animateEnter,
+      exit: typeof animateExit === 'undefined' ? 'animated fadeOutRight' : animateExit
+    },
+    z_index: 9999,
+    template: '<div data-notify="container" class="bootstrap-notify-container alert alert-dismissible ' + colorName + ' ' + (allowDismiss ? 'p-r-35' : '') + '" role="alert">' +
+    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+    '<i data-notify="icon" class="material-icons">' + icon + '</i> ' +
+    '<h4 data-notify="title">' + title + '</h4> ' +
+    '<span data-notify="message">' + message + '</span>' +
+    '<div class="progress" data-notify="progressbar">' +
+    '<div class="progress-bar progress-bar-' + colorName + '" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>' +
+    '</div>' +
+    '<a href="' + url + '" data-notify="url"></a>' +
+    '</div>'
+  })
+}
+
 $(function () {
   $.ajaxSetup({
     headers: {
@@ -137,7 +176,7 @@ $(function () {
   if ($('.modal').length > 0) {
     $('.modal').on('hidden.bs.modal', function () {
       $(this).removeData('bs.modal').find('.modal-content').empty().html('')
-    }).on('loaded.bs.modal', function () {
+    }).on('shown.bs.modal', function () {
       init($('.modal.in'))
       if ($('#manager-form').length > 0) {
         initManagerForm()
@@ -151,23 +190,39 @@ $(function () {
     e.preventDefault()
     const url = $(this).attr('href')
     const successCallback = $(this).data('success-callback')
-    const errorCallback = $(this).data('error-callback')
 
-    if (confirm('Are you sure?')) {
+    swal({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this record!',
+      type: 'warning',
+      confirmButtonText: 'YES',
+      cancelButtonText: 'NO',
+      confirmButtonColor: '#DD6B55',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true
+    }, function () {
       $.ajax({
         url: url,
         type: 'DELETE',
         dataType: 'json',
         data: {method: '_DELETE', submit: true},
         success: function (response) {
-          location.reload()
-          // window[successCallback](response)
+          swal({
+            title: 'Done!',
+            text: 'It was successfully deleted!',
+            timer: 2000,
+            type: 'success',
+            showConfirmButton: false
+          })
+          window[successCallback](response)
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          // window[typeof errorCallback === 'undefined' || !errorCallback ? 'formAJAXError' : errorCallback](jqXHR, textStatus, errorThrown)
+          swal('Error deleting!', 'Please try again', 'error')
         }
       })
-    }
+    })
+    return false
   }).delegate('form.ajax-form-submit', 'submit', function (e) {
     e.preventDefault()
     if (typeof $(this).data('extra-validation') === 'undefined' || !$(this).data('extra-validation') || window[$(this).data('extra-validation')]($(this))) {

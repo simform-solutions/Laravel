@@ -29,8 +29,16 @@ window.initManagerForm = function () {
   })
 }
 
-window.managerSavedSuccess = function (response, $form) {
+function refreshList () {
   managersTable.ajax.reload()
+}
+
+window.managerSavedSuccess = function (response, $form) {
+  refreshList()
   $form.find(':reset').trigger('click')
-  showNotification(response.msg, 'success')
+  window.showNotification('bg-green', 'Success!', 'done', 'Record saved.')
+}
+
+window.userDeletedSuccess = function () {
+  refreshList()
 }

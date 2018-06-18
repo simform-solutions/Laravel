@@ -20,6 +20,7 @@
                     Html::style('node_modules/adminbsb-materialdesign/plugins/bootstrap/css/bootstrap.min.css'),
                     Html::style('node_modules/adminbsb-materialdesign/plugins/node-waves/waves.min.css'),
                     Html::style('node_modules/adminbsb-materialdesign/plugins/animate-css/animate.min.css'),
+                    Html::style('node_modules/adminbsb-materialdesign/plugins/sweetalert/sweetalert.css'),
                     Html::style('node_modules/adminbsb-materialdesign/css/style.min.css'),
                     Html::tag('style', ['
                         .submit-spinner-layer {
@@ -41,7 +42,9 @@
                     $__env->yieldContent('content'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/jquery/jquery.min.js'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/bootstrap/js/bootstrap.min.js'),
+                    Html::script('node_modules/adminbsb-materialdesign/plugins/bootstrap-notify/bootstrap-notify.min.js'),
                     Html::script('node_modules/adminbsb-materialdesign/plugins/node-waves/waves.min.js'),
+                    Html::script('node_modules/adminbsb-materialdesign/plugins/sweetalert/sweetalert.min.js'),
                     Html::script('node_modules/adminbsb-materialdesign/js/admin.js'),
                     Html::script('js/app.js'),
                     $__env->yieldPushContent('scripts')
