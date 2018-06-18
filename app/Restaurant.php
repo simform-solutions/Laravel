@@ -5,13 +5,18 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
+use Sofa\Eloquence\Eloquence;
+use Sofa\Eloquence\Mutable;
 
 /**
  * @property \Grimzy\LaravelMysqlSpatial\Types\Point $location
  */
 class Restaurant extends Model
 {
-    use SpatialTrait;
+    use SpatialTrait, Mutable;
+    use Eloquence {
+        Eloquence::newEloquentBuilder insteadof SpatialTrait;
+    }
 
     protected $spatialFields = [
         'location'
@@ -19,6 +24,16 @@ class Restaurant extends Model
 
     protected $appends = [
         'current_status'
+    ];
+
+    protected $searchableColumns = ['name'];
+
+    protected $getterMutators = [
+        'name' => 'ucfirst'
+    ];
+
+    protected $setterMutators = [
+        'name' => 'strtolower'
     ];
 
     public function manager()

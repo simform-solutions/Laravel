@@ -15,6 +15,7 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/fractal": "^0.17.0",
         "propaganistas/laravel-phone": "^4.0",
+        "sofa/eloquence": "^5.6",
         "yajra/laravel-datatables-oracle": "^8.6",
         "zizaco/entrust": "dev-master"
     },

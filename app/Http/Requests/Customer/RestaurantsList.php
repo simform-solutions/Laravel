@@ -34,7 +34,8 @@ class RestaurantsList extends FormRequest
             'food_categories' => 'array',
             'food_categories.*' => 'exists:food_categories,id',
             'hours_of_operations' => 'array|max:4',
-            'hours_of_operations.*' => 'in:1,2,3,4|distinct'
+            'hours_of_operations.*' => 'in:1,2,3,4|distinct',
+            'search' => 'string'
         ];
     }
 }

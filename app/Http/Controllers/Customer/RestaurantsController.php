@@ -61,6 +61,10 @@ class RestaurantsController extends Controller
             $nearByRestaurants->whereIn('price_range', $request->get('cost_of_food'));
         }
 
+        if ($search = $request->get('search')) {
+            $nearByRestaurants->search($search);
+        }
+
         return $this->response->withPaginator(
             $nearByRestaurants->paginate(round($request->get('perPage')) ?: env('DEFAULT_PER_PAGE_RECORDS')),
             new RestaurantTransformer

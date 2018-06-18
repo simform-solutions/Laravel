@@ -5,11 +5,26 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Sofa\Eloquence\Eloquence;
+use Sofa\Eloquence\Mutable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
-    use Notifiable, EntrustUserTrait;
+    use Notifiable, EntrustUserTrait, Mutable;
+    use Eloquence {
+        Eloquence::save insteadof EntrustUserTrait;
+    }
+
+    protected $getterMutators = [
+        'first_name' => 'ucfirst',
+        'last_name' => 'ucfirst'
+    ];
+
+    protected $setterMutators = [
+        'first_name' => 'strtolower',
+        'last_name' => 'strtolower'
+    ];
 
     /**
      * The attributes that are mass assignable.
