@@ -35,8 +35,10 @@ function refreshList () {
 
 window.managerSavedSuccess = function (response, $form) {
   refreshList()
-  $form.find(':reset').trigger('click')
-  window.showNotification('bg-green', 'Success!', 'done', 'Record saved.')
+  if (typeof $form !== 'undefined') {
+    $form.find(':reset').trigger('click')
+    window.showNotification('bg-green', 'Success!', 'done', 'Record saved.')
+  }
 }
 
 window.userDeletedSuccess = function () {

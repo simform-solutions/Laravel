@@ -6,22 +6,18 @@ $(function () {
     processing: true,
     serverSide: true,
     ajax: managersListURL,
-    /* drawCallback: function () {
-      $(document).off('click.bs.toggle', 'div[data-toggle=toggle]')
-      $(this).find('input:checkbox[data-toggle=toggle]').bootstrapToggle('destroy').bootstrapToggle()
-      $(document).on('click.bs.toggle', 'div[data-toggle=toggle]', function (e) {
+    drawCallback: function () {
+      $(':checkbox[name=is_active]').off('click').on('click', function (e) {
         e.preventDefault()
         e.stopImmediatePropagation()
 
-        const $checkbox = $(this).find('input[type=checkbox]')
-        const value = $checkbox.is(':checked') ? 1 : 0
-        $checkbox.bootstrapToggle('toggle')
+        var action = ($(this).is(':checked') ? '' : 'de-') + 'activated'
 
-        if (confirm('Are you sure?')) {
-          ajaxFormSubmit($('<form id="account_change_status" action="' + $checkbox.data('url') + '" method="post" data-success-callback="userSavedSuccess"><input type="hidden" name="_method" value="PATCH" /><input type="number" name="is_active" value="' + value + '" /></form>'))
-        }
+        ajaxConfirmation('This account will be ' + action + '!', $(this).data('url'), 'managerSavedSuccess', 'It was successfully ' + action + '!', 'Error de-activating!', { is_active: $(this).is(':checked') ? 1 : 0 }, 'PATCH', '_PATCH')
+
+        return false
       })
-    }, */
+    },
     columns: [
       { data: 'avatar', name: 'avatar', sortable: false, searchable: false },
       { data: 'first_name', name: 'first_name' },

@@ -104,8 +104,8 @@ window.ajaxFormSubmit = function ($form) {
   }
 }
 
-window.formAJAXError = function (jqXHR) {
-  showNotification(jqXHR.responseJSON.message, 'danger')
+window.formAJAXError = function () {
+  window.showNotification('bg-red', 'Error!', 'done', 'Server Error.')
 }
 
 window.showNotification = function (colorName, title, icon, message, url, animateEnter, animateExit) {
@@ -144,6 +144,45 @@ window.showNotification = function (colorName, title, icon, message, url, animat
     '</div>' +
     '<a href="' + url + '" data-notify="url"></a>' +
     '</div>'
+  })
+}
+
+window.ajaxConfirmation = function (description, url, successCallback, successDescription, errorDescription, data, method, dataMethod) {
+  method = typeof method === 'undefined' ? 'DELETE' : method
+  data = typeof data === 'undefined' ? {} : data
+  data.method = typeof dataMethod === 'undefined' ? '_DELETE' : dataMethod
+  data.submit = true
+
+  swal({
+    title: 'Are you sure?',
+    text: description,
+    type: 'warning',
+    confirmButtonText: 'YES',
+    cancelButtonText: 'NO',
+    confirmButtonColor: '#DD6B55',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true
+  }, function () {
+    $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      data: data,
+      success: function (response) {
+        swal({
+          title: 'Done!',
+          text: successDescription,
+          timer: 2000,
+          type: 'success',
+          showConfirmButton: false
+        })
+        window[successCallback](response)
+      },
+      error: function () {
+        swal(errorDescription, 'Please try again', 'error')
+      }
+    })
   })
 }
 
@@ -188,40 +227,7 @@ $(function () {
     $(this).closest('.form-group, .input-group').find('input:file').trigger('click')
   }).delegate('a.confirm-delete', 'click', function (e) {
     e.preventDefault()
-    const url = $(this).attr('href')
-    const successCallback = $(this).data('success-callback')
-
-    swal({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this record!',
-      type: 'warning',
-      confirmButtonText: 'YES',
-      cancelButtonText: 'NO',
-      confirmButtonColor: '#DD6B55',
-      showCancelButton: true,
-      closeOnConfirm: false,
-      showLoaderOnConfirm: true
-    }, function () {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        dataType: 'json',
-        data: {method: '_DELETE', submit: true},
-        success: function (response) {
-          swal({
-            title: 'Done!',
-            text: 'It was successfully deleted!',
-            timer: 2000,
-            type: 'success',
-            showConfirmButton: false
-          })
-          window[successCallback](response)
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          swal('Error deleting!', 'Please try again', 'error')
-        }
-      })
-    })
+    ajaxConfirmation('You will not be able to recover this record!', $(this).attr('href'), $(this).data('success-callback'), 'It was successfully deleted!', 'Error deleting!')
     return false
   }).delegate('form.ajax-form-submit', 'submit', function (e) {
     e.preventDefault()
