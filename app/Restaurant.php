@@ -61,12 +61,12 @@ class Restaurant extends Model
 
     public function getDistanceAttribute($value)
     {
-        return (float) number_format($value, 1);
+        return (float)number_format($value, 1);
     }
 
     public function getPriceRangeAttribute($value)
     {
-        return (int) $value;
+        return (int)$value;
     }
 
     public function getCurrentStatusAttribute()
@@ -113,5 +113,40 @@ class Restaurant extends Model
     public function photos()
     {
         return $this->hasMany(RestaurantPhoto::class, 'restaurant_id', 'id');
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::createFromTimestamp(strtotime((string)$value))->diffForHumans();
+    }
+
+    public static function getMeAllWithTheGivenStatus($column = 'hours_of_operations')
+    {
+        return self::whereHas('timings', function ($tq) use ($column) {
+            $request = \request();
+            if ($request->request->has($column) && count($request->get($column)) > 0) {
+                $currentDateTimeObj = Carbon::now();
+
+                $from = "STR_TO_DATE(concat('{$currentDateTimeObj->toDateString()}', ' ', from_time), \"%Y-%m-%d %H:%i:%s\")";
+                $to = "STR_TO_DATE(concat('{$currentDateTimeObj->toDateString()}', ' ', to_time), \"%Y-%m-%d %H:%i:%s\")";
+                $current = "STR_TO_DATE('{$currentDateTimeObj->toDateTimeString()}', \"%Y-%m-%d %H:%i:%s\")";
+
+                $tq->where(function ($mtq) use ($request, $currentDateTimeObj, $from, $to, $current, $column) {
+                    foreach ($request->get($column) as $hourOfOperation) {
+                        $theHourOfOperationFunction = 'orGetMeAllOpenRestaurants';
+
+                        if ($hourOfOperation === 2) {
+                            $theHourOfOperationFunction = 'orGetMeAllClosedRestaurants';
+                        } elseif ($hourOfOperation === 3) {
+                            $theHourOfOperationFunction = 'orGetMeAllOpeningSoonRestaurants';
+                        } elseif ($hourOfOperation === 4) {
+                            $theHourOfOperationFunction = 'orGetMeAllClosingSoonRestaurants';
+                        }
+
+                        $theHourOfOperationFunction($mtq, $from, $to, $current, $currentDateTimeObj);
+                    }
+                });
+            }
+        });
     }
 }

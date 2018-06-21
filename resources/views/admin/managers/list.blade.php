@@ -59,7 +59,7 @@
                                     <th class="width-50"></th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
-                                    <th>Email</th>
+                                    <th>E-mail Address</th>
                                     <th>Mobile</th>
                                     <th>Last Modified On</th>
                                     <th></th>

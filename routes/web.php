@@ -23,5 +23,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('check-email/{manager?}', ['as' => 'managers.checkEmail', 'uses' => 'ManagersController@checkEmail']);
         Route::get('check-mobile/{manager?}', ['as' => 'managers.checkMobile', 'uses' => 'ManagersController@checkMobile']);
         Route::get('managers-list', ['as' => 'managers.anyData', 'uses' => 'ManagersController@anyData']);
+
+        Route::resource('restaurants', 'RestaurantsController');
+        Route::get('restaurants-list', ['as' => 'restaurants.anyData', 'uses' => 'RestaurantsController@anyData']);
     });
 });

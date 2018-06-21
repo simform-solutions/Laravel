@@ -32,14 +32,16 @@ class ManagersController extends Controller
                         $user->avatar,
                         'Avatar',
                         [
-                            'class' => 'img-thumbnail img-circle',
-                            'style' => 'height: 50px; width: 50px;'
+                            'class' => 'img-circle',
+                            'style' => 'height: 50px !important; width: 50px !important;'
                         ]
                     ),
                     [
                         'data-lightbox' => 'user-avatars',
                         'data-title' => $user->fullName()
                     ], null, false);
+            })->editColumn('email', function (User $user) {
+                return '<a href="mailto:' . $user->email . '">' . $user->email . '</a>';
             })->editColumn('is_active', function (User $user) {
                 return '<div class="switch panel-switch-btn">
                             <label>De-active<input data-url="' . route('admin.managers.update', ['manager' => $user->id]) . '" type="checkbox" ' . ($user->is_active ? 'checked' : '') . ' name="is_active" /><span class="lever switch-col-teal"></span>Active</label>
@@ -49,7 +51,7 @@ class ManagersController extends Controller
             })->addColumn('deleteAction', function (User $user) {
                 return '<a href="' . route('admin.managers.destroy', ['manager' => $user->id]) . '" data-success-callback="userDeletedSuccess" class="btn btn-danger waves-effect btn-xs confirm-delete"><i class="material-icons">delete</i></a>';
             })->rawColumns([
-                'avatar', 'is_active', 'editAction', 'deleteAction'
+                'email', 'avatar', 'is_active', 'editAction', 'deleteAction'
             ])->make(true);
     }
 

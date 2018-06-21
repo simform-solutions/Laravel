@@ -10,3 +10,9 @@
         <span>Managers</span>
     </a>
 </li>
+<li class="{{ isActiveRoute('admin.restaurants.index') }}">
+    <a href="{{ route('admin.restaurants.index') }}">
+        <i class="material-icons">restaurant</i>
+        <span>Restaurants</span>
+    </a>
+</li>

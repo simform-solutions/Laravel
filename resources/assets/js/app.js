@@ -208,7 +208,6 @@ $(function () {
 
   if (typeof $.fn.slimscroll !== 'undefined') {
     activeSlimScrollTo($('.sidebar .menu'), '100%')
-    activeSlimScrollTo($('.table-responsive'), '100%')
     activeSlimScrollTo($('.navbar-right .dropdown-menu .body .menu'))
   }
 

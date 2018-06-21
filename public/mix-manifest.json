@@ -1,6 +1,10 @@
 {
+    "/js/restaurant-form.js": "/js/restaurant-form.js",
     "/js/manager-form.js": "/js/manager-form.js",
+    "/js/dataTables.bootstrap.min.js": "/js/dataTables.bootstrap.min.js",
+    "/js/restaurants-list.js": "/js/restaurants-list.js",
+    "/js/managers-list.js": "/js/managers-list.js",
     "/js/app.js": "/js/app.js",
-    "/css/main.css": "/css/main.css",
-    "/js/managers-list.js": "/js/managers-list.js"
+    "/css/dataTables.bootstrap.min.css": "/css/dataTables.bootstrap.min.css",
+    "/css/main.css": "/css/main.css"
 }
